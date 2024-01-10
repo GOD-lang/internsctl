@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Function to display the manual page
+display_manual() {
+    echo "internsctl(1) - Custom Linux command for operations"
+    echo
+    echo "NAME"
+    echo "       internsctl - Perform custom operations"
+    echo
+    echo "SYNOPSIS"
+    echo "       internsctl [OPTION]..."
+    echo
+    echo "DESCRIPTION"
+    echo "       internsctl is a custom Linux command for performing operations."
+    echo
+    echo "OPTIONS"
+    echo "       --help     Display help and exit"
+    echo "       --version  Output version information and exit"
+    echo
+    echo "EXAMPLES"
+    echo "       internsctl [options] [arguments]"
+}
+
+# Function to display the help message
+display_help() {
+    echo "Usage: internsctl [OPTION]..."
+    echo "Perform custom operations with internsctl."
+    echo
+    echo "Options:"
+    echo "  --help     Display this help message"
+    echo "  --version  Display version information"
+    echo
+    echo "Examples:"
+    echo "  internsctl [options] [arguments]"
+}
+
+# Function to display the version
+display_version() {
+    echo "internsctl v0.1.0"
+}
+
+# Main logic
+case "$1" in
+    --help)
+        display_help
+        ;;
+    --version)
+        display_version
+        ;;
+    *)
+        echo "Invalid option. Use 'internsctl --help' for usage instructions."
+        ;;
+esac

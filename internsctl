@@ -1,0 +1,66 @@
+# Function to get file information
+get_file_info() {
+    if [ -z "$1" ]; then
+        echo "Error: Missing filename. Usage: internsctl file getinfo [options] <file-name>"
+        exit 1
+    fi
+
+    filename="$1"
+    size_option=false
+    permissions_option=false
+    owner_option=false
+    last_modified_option=false
+
+    # Parse options
+    while [ "$#" -gt 1 ]; do
+        case "$1" in
+            --size | -s)
+                size_option=true
+                ;;
+            --permissions | -p)
+                permissions_option=true
+                ;;
+            --owner | -o)
+                owner_option=true
+                ;;
+            --last-modified | -m)
+                last_modified_option=true
+                ;;
+            *)
+                echo "Invalid option: $1"
+                exit 1
+                ;;
+        esac
+        shift
+    done
+
+    # Get file information
+    if [ "$size_option" = true ]; then
+        if [ "$(uname)" == "Darwin" ]; then
+            stat -f "%z" "$filename"
+        elif [ "$(uname)" == "Linux" ]; then
+            stat --format="%s" "$filename"
+        fi
+    elif [ "$permissions_option" = true ]; then
+        if [ "$(uname)" == "Darwin" ]; then
+            stat -f "%Op" "$filename"
+        elif [ "$(uname)" == "Linux" ]; then
+            stat --format="%a" "$filename"
+        fi
+    elif [ "$owner_option" = true ]; then
+        if [ "$(uname)" == "Darwin" ]; then
+            stat -f "%Su" "$filename"
+        elif [ "$(uname)" == "Linux" ]; then
+            stat --format="%U" "$filename"
+        fi
+    elif [ "$last_modified_option" = true ]; then
+        if [ "$(uname)" == "Darwin" ]; then
+            stat -f "%Sm" -t "%Y-%m-%d %H:%M:%S%z" "$filename"
+        elif [ "$(uname)" == "Linux" ]; then
+            stat --format="%y" "$filename"
+        fi
+    else
+        # Default output
+        stat --format="File: %n%nAccess: %A%nSize(B): %s%nOwner: %U%nModify: %y" "$filename"
+    fi
+}
